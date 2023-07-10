@@ -53,7 +53,9 @@ router.get('/:urlId', (req, res) => {
 
 router.post('/', async (req, res) => {
   const originalUrl = req.body.originalUrl;
-  const base = `http://localhost:3002`;
+  // const base = `http://localhost:3002`;
+
+  const base = `https://mern-link-shortener-backend.vercel.app`;
   const urlId = shortid.generate();
   console.log("originalUrl: " + originalUrl);
 
@@ -105,8 +107,10 @@ router.put('/:id', async (req, res) => {
   } else  {
     console.log("new entry (previous field overwritten)");
     // }
-    const base = `http://localhost:3002`;
-    const shortUrl = `${base}/${req.body.urlId}`;
+
+    // const base = `http://localhost:3002`;
+    const base = `https://mern-link-shortener-backend.vercel.app`
+    const shortUrl = `${base}/${req.body.urlId}`
 
     Link.findByIdAndUpdate(
       {_id: req.params.id},
