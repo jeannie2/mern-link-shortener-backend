@@ -4,6 +4,7 @@
 // Does order of routes matter? *
 // react router vs express router
 // if 2 ppl paste same link, wil be diff links for each person (tho direct to same page)
+// package.json: frontend + backend
 
 const express = require('express');
 const router = express.Router();
