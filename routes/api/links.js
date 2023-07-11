@@ -1,24 +1,25 @@
-const express = require('express');
-const router = express.Router();
-// const morgan = require("morgan"); // added. need both??
-const bodyParser = require('body-parser'); // added
-const shortid = require("shortid");
+const express = require('express')
+const router = express.Router()
+
+// const morgan = require("morgan");
+const bodyParser = require('body-parser')
+const shortid = require("shortid")
 const validUrl = require('valid-url')
 
 const app = express(); //added
-const Link = require('../../models/Link');
+const Link = require('../../models/Link')
 
-// app.use(morgan("tiny")); // added
+// app.use(morgan("tiny"));
 
 app.use(bodyParser.json()) // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }))
 
 // router.get('/test', (req, res) => res.send('book route testing!'));
 
 router.get('/show/:id', (req, res) => {
   Link.findById(req.params.id)
     .then((link) => res.json(link))
-    .catch((err) => res.status(404).json({ nolinksfound: 'No link found' }));
+    .catch((err) => res.status(404).json({ nolinksfound: 'No link found' }))
 });
 
 router.get('/:urlId', (req, res) => {
@@ -26,22 +27,22 @@ router.get('/:urlId', (req, res) => {
   // Link.findById(req.params.urlId)
   Link.findOne({urlId: req.params.urlId})
     .then((link) => res.json(link)) // logs howdy with both urlId and id
-    .catch((err) => res.status(404).json({ nolinkfound: 'No link found' }));
+    .catch((err) => res.status(404).json({ nolinkfound: 'No link found' }))
 });
 
 router.post('/', async (req, res) => {
-  const originalUrl = req.body.originalUrl;
-  const base = `http://localhost:3002`;
+  const originalUrl = req.body.originalUrl
+  // const base = `http://localhost:3002`
+  const base = `https://mern-url-shortener-frontend-production.up.railway.app`
 
-  // const base = `https://mern-link-shortener-backend.vercel.app`;
-  const urlId = shortid.generate();
-  console.log("originalUrl: " + originalUrl);
+  const urlId = shortid.generate()
+  console.log("originalUrl: " + originalUrl)
 
   if (validUrl.isUri(originalUrl)) {
     // res.send("passed")
     try {
           const data = req.body;
-          const shortUrl = `${base}/${urlId}`;
+          const shortUrl = `${base}/${urlId}`
 
           url = new Link({
             ...data,
@@ -49,7 +50,7 @@ router.post('/', async (req, res) => {
             urlId
           });
 
-        await url.save();
+        await url.save()
           res.json({
             url: url,
             id: url._id // how stored in mongodb
@@ -58,10 +59,10 @@ router.post('/', async (req, res) => {
       // }
       } catch (err) {
         console.log(err);
-        res.status(500).json('Server error');
+        res.status(500).json('Server error')
       }
     } else {
-      res.status(400).json('Invalid original url, please try again');
+      res.status(400).json('Invalid original url, please try again')
     }
 })
 
@@ -76,11 +77,11 @@ router.put('/:id', async (req, res) => {
     console.log("already exists")
     return res.status(400).json({msg: "Fail, please choose a different link"});
   } else  {
-    console.log("new entry (previous field overwritten)");
+    console.log("new entry (previous field overwritten)")
     // }
 
-    const base = `http://localhost:3002`;
-    // const base = `https://mern-link-shortener-backend.vercel.app`
+    // const base = `http://localhost:3002`;
+    const base = `https://mern-url-shortener-frontend-production.up.railway.app`
     const shortUrl = `${base}/${req.body.urlId}`
 
     Link.findByIdAndUpdate(
