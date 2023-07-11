@@ -1,14 +1,6 @@
-// await?
-// res.send vs res.json
-// check other methods for redirection in books
-// Does order of routes matter? *
-// react router vs express router
-// if 2 ppl paste same link, wil be diff links for each person (tho direct to same page)
-// package.json: frontend + backend
-
 const express = require('express');
 const router = express.Router();
-const morgan = require("morgan"); // added. need both ??
+// const morgan = require("morgan"); // added. need both??
 const bodyParser = require('body-parser'); // added
 const shortid = require("shortid");
 const validUrl = require('valid-url')
@@ -16,38 +8,24 @@ const validUrl = require('valid-url')
 const app = express(); //added
 const Link = require('../../models/Link');
 
-app.use(morgan("tiny")); // added
+// app.use(morgan("tiny")); // added
 
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // router.get('/test', (req, res) => res.send('book route testing!'));
 
-router.get('/all', (req, res) => { // HOME before. remove when finish
-  Link.find()
-    .then((links) => res.json(links))
-    .catch((err) => res.status(404).json({ nolinksfound: 'No links found' }));
-});
-
-router.get('/show/:id', (req, res) => { // async, await here?
+router.get('/show/:id', (req, res) => {
   Link.findById(req.params.id)
     .then((link) => res.json(link))
     .catch((err) => res.status(404).json({ nolinksfound: 'No link found' }));
 });
 
-// router.get('/:id', (req, res) => {
-//   Book.findById(req.params.id)
-//     .then((book) => res.json(book))
-//     .catch((err) => res.status(404).json({ nobookfound: 'No Book found' }));
-// });
-
- // res.status(302).redirect('/');
- // res.redirect(301, '/test');
 router.get('/:urlId', (req, res) => {
   console.log("req.params.urlId: " + req.params.urlId)
-  // Book.findById(req.params.urlId)
+  // Link.findById(req.params.urlId)
   Link.findOne({urlId: req.params.urlId})
-    .then((link) => res.json(link)) // logs howdy with both urlId and id.
+    .then((link) => res.json(link)) // logs howdy with both urlId and id
     .catch((err) => res.status(404).json({ nolinkfound: 'No link found' }));
 });
 
@@ -62,10 +40,6 @@ router.post('/', async (req, res) => {
   if (validUrl.isUri(originalUrl)) {
     // res.send("passed")
     try {
-      // let url = await Book.findOne({ originalUrl });
-      /* if (url) {
-          res.json(url);
-        } else { */
           const data = req.body;
           const shortUrl = `${base}/${urlId}`;
 
@@ -80,8 +54,7 @@ router.post('/', async (req, res) => {
             url: url,
             id: url._id // how stored in mongodb
           });
-
-          // link added successfully msg ??
+          // link added successfully msg
       // }
       } catch (err) {
         console.log(err);
@@ -94,15 +67,13 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   console.log("req.body.urlId: " + req.body.urlId) // req.params.urlId undefined
-  console.log("req.param.id " + req.params.id) // works
-  // console.log("req.body.shortUrl: " + req.body.shortUrl) // works
+  console.log("req.param.id " + req.params.id) // console.log("req.body.shortUrl: " + req.body.shortUrl) // works
 
   let urlId = req.body.urlId
   let checkUser = await Link.exists({ urlId: req.body.urlId})
 
   if(checkUser) {
     console.log("already exists")
-    // how to pass error message to react
     return res.status(400).json({msg: "Fail, please choose a different link"});
   } else  {
     console.log("new entry (previous field overwritten)");
@@ -127,12 +98,5 @@ router.put('/:id', async (req, res) => {
       )
   }
 })
-
-/*
-router.delete('/:id', (req, res) => {
-  Book.findByIdAndRemove(req.params.id, req.body)
-    .then((book) => res.json({ mgs: 'Book entry deleted successfully' }))
-    .catch((err) => res.status(404).json({ error: 'No such a book' }));
-}); */
 
 module.exports = router;

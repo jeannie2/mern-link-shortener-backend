@@ -13,13 +13,13 @@ app.get('/', (req, res) => res.send('home page'));
 
 app.use('/api/links', links);
 
-// app.get('/:urlId', (req, res) => res.send('Hello urlId world!')) // need?
+// app.get('/:urlId', (req, res) => res.send('Hello urlId world!'))
 
 // app.get('/:urlId', (req, res) => {
 //   res.send(`{req.params.urlId}`);
 // });
 
-const port = process.env.PORT || 8082;
+const port = process.env.PORT || 8080;
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
 
