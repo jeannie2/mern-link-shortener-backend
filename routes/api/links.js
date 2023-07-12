@@ -33,7 +33,8 @@ router.get('/:urlId', (req, res) => {
 router.post('/', async (req, res) => {
   const originalUrl = req.body.originalUrl
   // const base = `http://localhost:3002`
-  const base = `https://mern-url-shortener-frontend-production.up.railway.app`
+  // const base = `https://mern-url-shortener-frontend-production.up.railway.app`
+  const base = `s5n.co`
 
   const urlId = shortid.generate()
   console.log("originalUrl: " + originalUrl)
@@ -81,7 +82,9 @@ router.put('/:id', async (req, res) => {
     // }
 
     // const base = `http://localhost:3002`;
-    const base = `https://mern-url-shortener-frontend-production.up.railway.app`
+    // const base = `https://mern-url-shortener-frontend-production.up.railway.app`
+    const base = `s5n.co`
+
     const shortUrl = `${base}/${req.body.urlId}`
 
     Link.findByIdAndUpdate(
